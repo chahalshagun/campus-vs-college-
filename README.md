@@ -98,3 +98,7 @@ Visit the live website: [https://yourusername.github.io/college-vs-campus](https
 ## 📞 Contact
 
 Created with ❤️ for students looking for their perfect college match.
+=======
+# campus-vs-college-
+College vs Campus - A comprehensive college search and comparison platform
+>>>>>>> a13b83b6b55f4f8d5c2c71af847f3f51aa099357
