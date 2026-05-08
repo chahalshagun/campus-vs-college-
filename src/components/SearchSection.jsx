@@ -2,10 +2,32 @@ import React, { useState } from 'react';
 
 const SearchSection = ({ searchQuery, setSearchQuery, filterOptions, setFilterOptions }) => {
   const [showFilters, setShowFilters] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    console.log('Searching for:', searchQuery);
+    if (!searchQuery.trim()) {
+      alert('Please enter a search term');
+      return;
+    }
+    
+    setIsSearching(true);
+    
+    // Simulate search API call
+    setTimeout(() => {
+      const mockResults = [
+        { id: 1, name: "Indian Institute of Technology", location: "Multiple Locations" },
+        { id: 2, name: "National Institute of Technology", location: "Multiple Locations" },
+        { id: 3, name: "Delhi University", location: "Delhi" }
+      ].filter(college => 
+        college.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        college.location.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      
+      setSearchResults(mockResults);
+      setIsSearching(false);
+    }, 1000);
   };
 
   return (
@@ -26,9 +48,10 @@ const SearchSection = ({ searchQuery, setSearchQuery, filterOptions, setFilterOp
             />
             <button
               type="submit"
-              className="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold"
+              className="bg-indigo-600 text-white px-8 py-4 rounded-lg hover:bg-indigo-700 transition font-semibold disabled:opacity-50"
+              disabled={isSearching}
             >
-              Search
+              {isSearching ? 'Searching...' : 'Search'}
             </button>
             <button
               type="button"
@@ -98,6 +121,27 @@ const SearchSection = ({ searchQuery, setSearchQuery, filterOptions, setFilterOp
             </div>
           )}
         </form>
+
+        {searchResults.length > 0 && (
+          <div className="mt-8 max-w-4xl mx-auto">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">Search Results</h3>
+            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              {searchResults.map((result) => (
+                <div key={result.id} className="p-4 border-b border-gray-200 hover:bg-gray-50 transition">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-semibold text-gray-800">{result.name}</h4>
+                      <p className="text-sm text-gray-600">{result.location}</p>
+                    </div>
+                    <button className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-12">
           <div className="bg-indigo-50 p-6 rounded-lg text-center">

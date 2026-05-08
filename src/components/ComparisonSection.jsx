@@ -4,53 +4,33 @@ const ComparisonSection = ({ selectedColleges, setSelectedColleges }) => {
   const comparisonData = [
     {
       feature: "College Name",
-      iitBombay: "IIT Bombay",
-      iimAhmedabad: "IIM Ahmedabad",
-      aiimsDelhi: "AIIMS Delhi"
+      getCollegeData: (college) => college.name
     },
     {
       feature: "Location",
-      iitBombay: "Mumbai, Maharashtra",
-      iimAhmedabad: "Ahmedabad, Gujarat",
-      aiimsDelhi: "New Delhi"
+      getCollegeData: (college) => college.location
     },
     {
-      feature: "Established",
-      iitBombay: "1958",
-      iimAhmedabad: "1961",
-      aiimsDelhi: "1956"
-    },
-    {
-      feature: "NIRF Ranking 2024",
-      iitBombay: "3",
-      iimAhmedabad: "1",
-      aiimsDelhi: "1"
+      feature: "Rating",
+      getCollegeData: (college) => `${college.rating} ⭐`
     },
     {
       feature: "Annual Fees",
-      iitBombay: "₹2.5 Lakhs",
-      iimAhmedabad: "₹23 Lakhs",
-      aiimsDelhi: "₹1.5 Lakhs"
+      getCollegeData: (college) => college.fees
     },
     {
-      feature: "Placement Rate",
-      iitBombay: "85%",
-      iimAhmedabad: "100%",
-      aiimsDelhi: "95%"
+      feature: "Courses",
+      getCollegeData: (college) => college.courses.join(", ")
     },
     {
-      feature: "Average Package",
-      iitBombay: "₹18 LPA",
-      iimAhmedabad: "₹35 LPA",
-      aiimsDelhi: "₹12 LPA"
-    },
-    {
-      feature: "Popular Courses",
-      iitBombay: "B.Tech, M.Tech",
-      iimAhmedabad: "MBA, PGP",
-      aiimsDelhi: "MBBS, MD, MS"
+      feature: "Type",
+      getCollegeData: (college) => college.type
     }
   ];
+
+  const removeFromComparison = (collegeId) => {
+    setSelectedColleges(selectedColleges.filter(c => c.id !== collegeId));
+  };
 
   return (
     <div id="compare" className="py-16 bg-white">
@@ -62,62 +42,63 @@ const ComparisonSection = ({ selectedColleges, setSelectedColleges }) => {
         <div className="bg-gray-50 rounded-lg p-8 mb-8">
           <div className="text-center mb-8">
             <h3 className="text-xl font-semibold text-gray-700 mb-4">
-              Select up to 3 colleges to compare
+              Selected Colleges for Comparison ({selectedColleges.length}/3)
             </h3>
-            <div className="flex justify-center space-x-4">
-              <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition">
-                Add College
-              </button>
-              <button className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition">
-                Start Comparison
-              </button>
-            </div>
+            {selectedColleges.length === 0 ? (
+              <p className="text-gray-600 mb-4">No colleges selected. Add colleges from the Featured section to compare.</p>
+            ) : (
+              <div className="flex justify-center flex-wrap gap-4 mb-4">
+                {selectedColleges.map((college) => (
+                  <div key={college.id} className="bg-white px-4 py-2 rounded-lg border border-gray-300 flex items-center space-x-2">
+                    <span className="font-medium">{college.name}</span>
+                    <button
+                      onClick={() => removeFromComparison(college.id)}
+                      className="text-red-500 hover:text-red-700 font-bold"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
-            <thead className="bg-indigo-600 text-white">
-              <tr>
-                <th className="px-6 py-4 text-left font-semibold">Features</th>
-                <th className="px-6 py-4 text-center font-semibold">
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 bg-white rounded-lg mb-2 flex items-center justify-center">
-                      <span className="text-indigo-600 font-bold">IIT</span>
-                    </div>
-                    IIT Bombay
-                  </div>
-                </th>
-                <th className="px-6 py-4 text-center font-semibold">
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 bg-white rounded-lg mb-2 flex items-center justify-center">
-                      <span className="text-indigo-600 font-bold">IIM</span>
-                    </div>
-                    IIM Ahmedabad
-                  </div>
-                </th>
-                <th className="px-6 py-4 text-center font-semibold">
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 bg-white rounded-lg mb-2 flex items-center justify-center">
-                      <span className="text-indigo-600 font-bold">AIIMS</span>
-                    </div>
-                    AIIMS Delhi
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {comparisonData.map((row, index) => (
-                <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-                  <td className="px-6 py-4 font-medium text-gray-900">{row.feature}</td>
-                  <td className="px-6 py-4 text-center text-gray-700">{row.iitBombay}</td>
-                  <td className="px-6 py-4 text-center text-gray-700">{row.iimAhmedabad}</td>
-                  <td className="px-6 py-4 text-center text-gray-700">{row.aiimsDelhi}</td>
+        {selectedColleges.length > 0 && (
+          <div className="overflow-x-auto">
+            <table className="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+              <thead className="bg-indigo-600 text-white">
+                <tr>
+                  <th className="px-6 py-4 text-left font-semibold">Features</th>
+                  {selectedColleges.map((college, index) => (
+                    <th key={college.id} className="px-6 py-4 text-center font-semibold">
+                      <div className="flex flex-col items-center">
+                        <div className="w-16 h-16 bg-white rounded-lg mb-2 flex items-center justify-center">
+                          <span className="text-indigo-600 font-bold text-xs">
+                            {college.name.split(' ').map(word => word[0]).join('').substring(0, 3)}
+                          </span>
+                        </div>
+                        {college.name.length > 20 ? college.name.substring(0, 20) + '...' : college.name}
+                      </div>
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {comparisonData.map((row, index) => (
+                  <tr key={index} className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
+                    <td className="px-6 py-4 font-medium text-gray-900">{row.feature}</td>
+                    {selectedColleges.map((college) => (
+                      <td key={college.id} className="px-6 py-4 text-center text-gray-700">
+                        {row.getCollegeData(college)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-6 rounded-lg">

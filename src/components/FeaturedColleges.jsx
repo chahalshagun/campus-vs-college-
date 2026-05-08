@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const FeaturedColleges = () => {
+const FeaturedColleges = ({ selectedColleges, setSelectedColleges }) => {
   const [colleges, setColleges] = useState([
     {
       id: 1,
@@ -64,8 +64,18 @@ const FeaturedColleges = () => {
     }
   ]);
 
-  const handleAddToCompare = (collegeId) => {
-    console.log('Adding college to compare:', collegeId);
+  const handleAddToCompare = (college) => {
+    if (selectedColleges.length >= 3) {
+      alert('You can compare maximum 3 colleges at a time');
+      return;
+    }
+    
+    if (selectedColleges.some(c => c.id === college.id)) {
+      alert('This college is already added for comparison');
+      return;
+    }
+    
+    setSelectedColleges([...selectedColleges, college]);
   };
 
   return (
@@ -115,7 +125,7 @@ const FeaturedColleges = () => {
                 
                 <div className="flex space-x-2">
                   <button 
-                    onClick={() => handleAddToCompare(college.id)}
+                    onClick={() => handleAddToCompare(college)}
                     className="flex-1 bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
                   >
                     Compare

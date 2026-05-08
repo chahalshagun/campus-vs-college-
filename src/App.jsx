@@ -25,7 +25,10 @@ export default function App() {
         filterOptions={filterOptions}
         setFilterOptions={setFilterOptions}
       />
-      <FeaturedColleges />
+      <FeaturedColleges 
+        selectedColleges={selectedColleges}
+        setSelectedColleges={setSelectedColleges}
+      />
       <ComparisonSection 
         selectedColleges={selectedColleges}
         setSelectedColleges={setSelectedColleges}
